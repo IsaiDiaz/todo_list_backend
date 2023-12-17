@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  service-discovery:
+    image: service-discovery:0.0.1
+    ports:
+      - "8761:8761"
+    networks:
+      - servicios
+
+  gateway:
+    image: gateway:0.0.1
+    ports:
+      - "8181:8181"
+    environment:
+      - EUREKA_SERVER_URI=http://service-discovery:8761/eureka
+    networks:
+      - servicios
+    depends_on:
+      - service-discovery
+
+  postgresql:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=todolist
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5432:5432"
+    networks:
+      - servicios
+
+networks:
+  servicios:
+    driver: bridge

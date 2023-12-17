@@ -1,0 +1,41 @@
+version: '3'
+
+networks:
+  servicios:
+
+services:
+  auth:
+    image: auth:0.0.1
+    ports:
+      - "8010:8010"
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_URL=jdbc:postgresql://postgresql:5432/todolist
+      - EUREKA_SERVER_URI=http://service-discovery:8761/eureka
+    networks:
+      - servicios
+
+  tasks:
+    image: tasks:0.0.1
+    ports:
+      - "8011:8011"
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_URL=jdbc:postgresql://postgresql:5432/todolist
+      - EUREKA_SERVER_URI=http://service-discovery:8761/eureka 
+    networks:
+      - servicios
+  
+  users:
+    image: users:0.0.1
+    ports:
+      - "8012:8012"
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_URL=jdbc:postgresql://postgresql:5432/todolist
+      - EUREKA_SERVER_URI=http://service-discovery:8761/eureka
+    networks:
+      - servicios
